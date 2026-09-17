@@ -1,0 +1,29 @@
+# Values for prometheus-community/kube-prometheus-stack, tuned for this demo.
+#
+# The two serviceMonitorSelectorNilUsesHelmValues / ruleSelectorNilUsesHelmValues
+# overrides are the important part: by default the chart's Prometheus only
+# watches ServiceMonitors/PrometheusRules carrying its own release label, which
+# is a footgun the first time you hand-write a ServiceMonitor (like the one in
+# manifests/postgres-exporter/servicemonitor.yaml) and can't figure out why
+# Prometheus never scrapes it. Setting these to `false` tells Prometheus to
+# watch every ServiceMonitor/PrometheusRule in the cluster instead.
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    retention: 6h
+
+grafana:
+  adminPassword: watching-postgres-oss
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+      searchNamespace: ALL
+  service:
+    type: ClusterIP
+
+alertmanager:
+  enabled: false

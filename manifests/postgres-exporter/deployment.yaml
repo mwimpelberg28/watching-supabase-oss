@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-exporter
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: postgres-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres-exporter
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres-exporter
+    spec:
+      containers:
+        - name: postgres-exporter
+          image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
+          args:
+            # Self-hosted Supabase is one Postgres instance with several
+            # databases on it (project DB, plus whatever you add). This is
+            # the flag that decides whether the exporter sees all of them.
+            - --auto-discover-databases
+            - --collector.stat_statements
+          ports:
+            - name: metrics
+              containerPort: 9187
+          env:
+            # DATA_SOURCE_URI / _USER / _PASS instead of one DATA_SOURCE_NAME
+            # string so the password can come straight from the Secret the
+            # supabase-operator already generated - no need to template a
+            # connection string by hand.
+            - name: DATA_SOURCE_URI
+              value: "supabase-postgres.monitoring.svc.cluster.local:5432/postgres?sslmode=disable"
+            - name: DATA_SOURCE_USER
+              value: "supabase_admin"
+            - name: DATA_SOURCE_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-postgres-auth
+                  key: password
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 10
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
