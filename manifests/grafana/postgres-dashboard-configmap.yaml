@@ -148,7 +148,7 @@ data:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "${datasource}" },
-              "expr": "count(pg_stat_statements_mean_exec_time_seconds > 0.5) OR vector(0)",
+              "expr": "count(rate(pg_stat_statements_seconds_total[5m]) / clamp_min(rate(pg_stat_statements_calls_total[5m]), 1e-9) > 0.5) OR vector(0)",
               "refId": "A"
             }
           ],

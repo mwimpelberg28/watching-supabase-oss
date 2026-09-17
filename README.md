@@ -97,6 +97,12 @@ told about — which matters here because a self-hosted Supabase instance is
 exactly the "one Postgres server, several databases" shape that flag exists
 for.
 
+The dashboard's "slow queries" panel needs the `pg_stat_statements`
+*Postgres* extension (separate from the exporter's own `--collector.stat_statements`
+flag, already set in the Deployment) to actually be created. Supabase ships
+it by default; if that panel stays empty, connect to `supabase-postgres` and
+run `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;`.
+
 If you want to go deeper on that specific flag: I've spent the last few
 weeks in `postgres_exporter`'s implementation of it, fixing a bug where
 multi-database instances only ever got metrics for the first database.
