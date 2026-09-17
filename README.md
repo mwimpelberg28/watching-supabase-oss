@@ -93,9 +93,11 @@ hand-assemble.
 
 `--auto-discover-databases` (in that same Deployment) is the flag that makes
 the exporter see every database on the instance, not just the first one it's
-told about — which matters here because a self-hosted Supabase instance is
-exactly the "one Postgres server, several databases" shape that flag exists
-for.
+told about — which matters here specifically because of how Supabase
+branching works: each branch is its own Postgres database on the same
+instance, created when you branch and dropped when you merge or delete it.
+Without that flag (or with the bug described below), metrics for every
+branch after the first would silently just not exist.
 
 The dashboard's "slow queries" panel needs the `pg_stat_statements`
 *Postgres* extension (separate from the exporter's own `--collector.stat_statements`
