@@ -1,4 +1,4 @@
-# watching-postgres-oss
+# watching-supabase-oss
 
 Demo code for a Grafana OSS Community lightning talk: **monitoring a
 self-hosted (OSS) Supabase instance with a self-hosted (OSS) Grafana stack**,
@@ -72,9 +72,9 @@ kubectl apply -f manifests/grafana/
 ## Look at it
 
 ```bash
-# Grafana — admin / watching-postgres-oss (see values/kube-prometheus-stack-values.yaml)
+# Grafana — admin / watching-supabase-oss (see values/kube-prometheus-stack-values.yaml)
 kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:80
-# → http://localhost:3000 → Dashboards → "Watching Postgres (OSS)"
+# → http://localhost:3000 → Dashboards → "Watching Supabase (OSS)"
 
 # Supabase Studio
 kubectl -n monitoring port-forward svc/supabase-envoy 8000:8000

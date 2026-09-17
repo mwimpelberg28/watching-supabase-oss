@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: watching-postgres-oss-dashboard
+  name: watching-supabase-oss-dashboard
   namespace: monitoring
   labels:
     # kube-prometheus-stack's Grafana sidecar watches for this label
@@ -9,11 +9,11 @@ metadata:
     # and loads any ConfigMap carrying it, cluster-wide.
     grafana_dashboard: "1"
 data:
-  watching-postgres-oss.json: |
+  watching-supabase-oss.json: |
     {
-      "uid": "watching-postgres-oss",
-      "title": "Watching Postgres (OSS)",
-      "tags": ["postgres", "supabase", "watching-postgres-oss"],
+      "uid": "watching-supabase-oss",
+      "title": "Watching Supabase (OSS)",
+      "tags": ["postgres", "supabase", "watching-supabase-oss"],
       "timezone": "browser",
       "schemaVersion": 39,
       "version": 1,

@@ -47,7 +47,7 @@ cat <<'EOF'
 
 ==> Done. Next steps:
 
-  # Grafana (admin / watching-postgres-oss)
+  # Grafana (admin / watching-supabase-oss)
   kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:80
 
   # Supabase Studio

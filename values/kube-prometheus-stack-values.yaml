@@ -15,7 +15,7 @@ prometheus:
     retention: 6h
 
 grafana:
-  adminPassword: watching-postgres-oss
+  adminPassword: watching-supabase-oss
   sidecar:
     dashboards:
       enabled: true
