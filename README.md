@@ -53,7 +53,14 @@ kubectl create namespace monitoring
 helm install supabase supabase/supabase-project \
   --namespace monitoring \
   --set fullnameOverride=supabase \
-  --set project.publicUrl=http://localhost:8000 \
+  --set project.http.hostname=localhost \
+  --set project.http.port=8000 \
+  --set auth.siteUrl=http://localhost:8000 \
+  --set studio.orgName=watching-postgres-oss \
+  --set studio.projName=supabase \
+  --set singleDatabase.storage.storageClassName=gp2 \
+  --set storage.storage.storageClassName=gp2 \
+  --set studio.storage.storageClassName=gp2 \
   --wait
 
 # 3. Prometheus + Grafana

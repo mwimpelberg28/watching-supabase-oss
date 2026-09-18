@@ -6,6 +6,8 @@
 # steps, with explanations.
 set -euo pipefail
 
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
 command -v kubectl >/dev/null || { echo "kubectl is required" >&2; exit 1; }
 command -v helm >/dev/null || { echo "helm is required" >&2; exit 1; }
 
@@ -26,10 +28,20 @@ helm upgrade --install supabase-operator supabase/supabase-operator \
 
 echo "==> Deploying a self-hosted Supabase project (namespace: monitoring)"
 kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+# storageClassName is set explicitly because the chart leaves it blank (cluster
+# default), and clusters without a StorageClass annotated as default otherwise
+# leave the Postgres PVC stuck Pending. Adjust if your cluster's class differs.
 helm upgrade --install supabase supabase/supabase-project \
   --namespace monitoring \
   --set fullnameOverride=supabase \
-  --set project.publicUrl=http://localhost:8000 \
+  --set project.http.hostname=localhost \
+  --set project.http.port=8000 \
+  --set auth.siteUrl=http://localhost:8000 \
+  --set studio.orgName=watching-postgres-oss \
+  --set studio.projName=supabase \
+  --set singleDatabase.storage.storageClassName=gp2 \
+  --set storage.storage.storageClassName=gp2 \
+  --set studio.storage.storageClassName=gp2 \
   --wait
 
 echo "==> Installing kube-prometheus-stack (Prometheus + Grafana)"

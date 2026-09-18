@@ -27,3 +27,9 @@ grafana:
 
 alertmanager:
   enabled: false
+
+# Disabled: not part of what this demo shows (host-level metrics, not
+# Postgres), and it hostPort-binds 9100, which collides on clusters that
+# already run some other node-exporter DaemonSet.
+nodeExporter:
+  enabled: false
